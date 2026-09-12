@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Phone Calls -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <!-- SMS -->
-    <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.READ_SMS" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+  <uses-permission android:name="android.permission.SEND_SMS" />
 
     <!-- Contacts (for resolving names to numbers) -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -20,7 +19,7 @@
     <!-- Microphone for voice input -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
-    <!-- Internet for OpenAI API -->
+    <!-- Network access for Ollama -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- Vibrate for notifications -->
@@ -35,8 +34,7 @@
 
     <!-- Query installed packages for app launching -->
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission"
-        xmlns:tools="http://schemas.android.com/tools" />
+        tools:ignore="QueryAllPackagesPermission" />
 
     <application
         android:name=".AuraApplication"

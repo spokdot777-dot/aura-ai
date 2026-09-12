@@ -7,7 +7,7 @@ import com.aura.ai.BuildConfig
 
 /**
  * Provides an OkHttp logging interceptor that redacts sensitive headers and masks any
- * occurrences of the OpenAI API key inside logged messages.
+ * occurrences of configured credentials inside logged messages.
  *
  * This is intentionally simple: it delegates to HttpLoggingInterceptor for formatting
  * but sanitizes lines before emitting them.

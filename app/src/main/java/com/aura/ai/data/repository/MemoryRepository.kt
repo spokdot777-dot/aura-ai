@@ -26,7 +26,7 @@ class MemoryRepository @Inject constructor(
 
     suspend fun clearAll() = memoryDao.clearAll()
 
-    /** Build a memory context string to inject into the OpenAI system prompt. */
+    /** Build a bounded memory context string to inject into the assistant system prompt. */
     suspend fun buildMemoryContext(): String {
         val facts = memoryDao.getAllOnce()
         if (facts.isEmpty()) return ""

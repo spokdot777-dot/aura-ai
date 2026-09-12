@@ -6,6 +6,8 @@ import com.aura.ai.data.model.AuraAction
 import com.aura.ai.data.model.ChatMessage
 import com.aura.ai.data.repository.ConversationRepository
 import com.aura.ai.data.repository.MemoryRepository
+import com.aura.ai.domain.ai.AiConnectionResult
+import com.aura.ai.domain.ai.AiProvider
 import com.aura.ai.domain.usecase.SendMessageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,14 +23,17 @@ data class AuraUiState(
     val isListening: Boolean = false,
     val errorMessage: String? = null,
     val pendingAction: AuraAction? = null,
-    val ollamaModel: String = com.aura.ai.BuildConfig.OLLAMA_MODEL
+    val ollamaModel: String = com.aura.ai.BuildConfig.OLLAMA_MODEL,
+    val connectionTest: AiConnectionResult? = null,
+    val isTestingConnection: Boolean = false
 )
 
 @HiltViewModel
 class AuraViewModel @Inject constructor(
     private val conversationRepository: ConversationRepository,
     private val memoryRepository: MemoryRepository,
-    private val sendMessageUseCase: SendMessageUseCase
+    private val sendMessageUseCase: SendMessageUseCase,
+    private val aiProvider: AiProvider
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AuraUiState())
@@ -70,6 +75,18 @@ class AuraViewModel @Inject constructor(
                     errorMessage = err.message ?: "Unknown error"
                 )
             }
+        }
+    }
+
+    fun testOllamaConnection() {
+        _uiState.value = _uiState.value.copy(isTestingConnection = true, connectionTest = null)
+        viewModelScope.launch {
+            val result = aiProvider.testConnection()
+            _uiState.value = _uiState.value.copy(
+                isTestingConnection = false,
+                connectionTest = result,
+                errorMessage = result.failure?.message
+            )
         }
     }
 

@@ -1,6 +1,6 @@
 # AURA AI
 
-**AURA AI** is a mobile-first AI personal assistant for Android, powered by OpenAI GPT.  
+**AURA AI** is a mobile-first AI personal assistant for Android, powered by Ollama + Gemma.
 It understands natural language and performs real actions on your phone.
 
 ---
@@ -10,7 +10,7 @@ It understands natural language and performs real actions on your phone.
 This project will be developed and rolled out across clear phases to ensure a stable, secure, and user-friendly product. Below is the proposed set of phases and what each phase includes.
 
 - Phase 0 — Proof of Concept (Completed)
-  - Basic chat UI and integration with OpenAI API
+  - Basic chat UI and integration with the Ollama API
   - Parse simple JSON actions (make_call, send_sms, set_reminder, launch_app)
   - Local storage for conversation history (Room)
   - Runtime permission handling for core features
@@ -75,7 +75,7 @@ Success metrics
 - **Platform**: Android (API 26+)
 - **Language**: Kotlin
 - **UI**: Jetpack Compose + Material 3
-- **AI**: OpenAI GPT-4o-mini via REST API
+- **AI**: Ollama Gemma 3 1B Cloud via REST API
 - **Architecture**: MVVM + Clean Architecture (Use Cases)
 - **DI**: Hilt
 - **Database**: Room (conversation history + memory)
@@ -94,7 +94,7 @@ app/src/main/java/com/aura/ai/
 ├── data/
 │   ├── database/               # Room DB (conversations + memory)
 │   ├── model/                  # ChatMessage, AuraAction
-│   ├── remote/                 # OpenAI Retrofit service + DTOs
+│   ├── remote/                 # Ollama Retrofit service + DTOs
 │   └── repository/             # ConversationRepository, MemoryRepository
 ├── di/
 │   └── AppModule.kt            # Hilt dependency graph
@@ -130,7 +130,7 @@ AURA connects to an Ollama-compatible server. Create (or edit) `local.properties
 
 ```properties
 OLLAMA_BASE_URL=http://10.0.2.2:11434/
-OLLAMA_MODEL=llama3.2
+OLLAMA_MODEL=gemma3:1b-cloud
 ```
 
 The default base URL targets Ollama running on the host from an Android emulator. Use your machine's reachable address when running on a physical device.

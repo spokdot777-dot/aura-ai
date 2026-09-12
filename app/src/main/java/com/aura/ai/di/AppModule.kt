@@ -6,7 +6,10 @@ import com.aura.ai.BuildConfig
 import com.aura.ai.data.database.AuraDatabase
 import com.aura.ai.data.database.dao.*
 import com.aura.ai.data.auth.CoreTokenStore
+import com.aura.ai.data.remote.OllamaAiProvider
+import com.aura.ai.data.remote.OllamaConfiguration
 import com.aura.ai.data.remote.OllamaService
+import com.aura.ai.domain.ai.AiProvider
 import com.aura.ai.data.remote.core.CoreAuthInterceptor
 import com.aura.ai.data.remote.core.CoreService
 import com.aura.ai.network.BodySanitizingInterceptor
@@ -20,6 +23,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import java.util.concurrent.TimeUnit
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Named
@@ -44,6 +48,9 @@ object AppModule {
             }
             .addInterceptor(BodySanitizingInterceptor())
             .addInterceptor(redacting)
+            .connectTimeout(OllamaConfiguration.connectionTimeoutSeconds, TimeUnit.SECONDS)
+            .readTimeout(OllamaConfiguration.readTimeoutSeconds, TimeUnit.SECONDS)
+            .writeTimeout(OllamaConfiguration.writeTimeoutSeconds, TimeUnit.SECONDS)
             .build()
     }
 
@@ -74,9 +81,13 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideAiProvider(ollamaAiProvider: OllamaAiProvider): AiProvider = ollamaAiProvider
+
+    @Provides
+    @Singleton
     fun provideOllamaService(@Named("ollama") okHttpClient: OkHttpClient, moshi: Moshi): OllamaService {
         return Retrofit.Builder()
-            .baseUrl(BuildConfig.OLLAMA_BASE_URL.trimEnd('/') + "/")
+            .baseUrl(OllamaConfiguration.baseUrl)
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()

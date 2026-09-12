@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 /**
- * Parses an OpenAI assistant response and extracts a structured [AuraAction].
+ * Parses an assistant response and extracts a structured [AuraAction].
  *
  * AURA uses a function-call convention via a JSON code block. If the response
  * contains a ```json block with an "action" key, it is parsed as an action.

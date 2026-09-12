@@ -101,6 +101,41 @@ case "$( uname )" in                #(
   NONSTOP* )        nonstop=true ;;
 esac
 
+# ---- Bootstrap: ensure gradle-wrapper.jar exists ----
+WRAPPER_JAR="$APP_HOME/gradle/wrapper/gradle-wrapper.jar"
+if [ ! -f "$WRAPPER_JAR" ]; then
+  echo "gradle-wrapper.jar not found; attempting to download Gradle distribution and extract the wrapper jar"
+  PROPS_FILE="$APP_HOME/gradle/wrapper/gradle-wrapper.properties"
+  DIST_URL=""
+  if [ -f "$PROPS_FILE" ]; then
+    DIST_URL=$(sed -n 's/^distributionUrl=\(.*\)$/\1/p' "$PROPS_FILE" | sed 's/\r$//')
+  fi
+  if [ -z "$DIST_URL" ]; then
+    DIST_URL="https://services.gradle.org/distributions/gradle-8.7-bin.zip"
+  fi
+  echo "Downloading $DIST_URL"
+  tmpzip="$(mktemp /tmp/gradle_XXXXXX.zip)"
+  if command -v curl >/dev/null 2>&1; then
+    curl -fsSL -o "$tmpzip" "$DIST_URL" || { echo "Failed to download $DIST_URL"; rm -f "$tmpzip"; }
+  elif command -v wget >/dev/null 2>&1; then
+    wget -qO "$tmpzip" "$DIST_URL" || { echo "Failed to download $DIST_URL"; rm -f "$tmpzip"; }
+  else
+    echo "Neither curl nor wget available to download Gradle distribution"
+  fi
+  if [ -f "$tmpzip" ]; then
+    mkdir -p "$APP_HOME/gradle/wrapper"
+    if command -v unzip >/dev/null 2>&1; then
+      unzip -p "$tmpzip" "*/lib/gradle-wrapper.jar" > "$WRAPPER_JAR" || { echo "Failed to extract gradle-wrapper.jar from $tmpzip"; rm -f "$tmpzip"; }
+      chmod 644 "$WRAPPER_JAR"
+      rm -f "$tmpzip"
+      echo "Extracted gradle-wrapper.jar to $WRAPPER_JAR"
+    else
+      echo "unzip not available to extract gradle-wrapper.jar"
+    fi
+  fi
+fi
+# ---- end bootstrap ----
+
 CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
 
 

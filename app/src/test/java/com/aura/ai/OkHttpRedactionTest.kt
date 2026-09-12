@@ -32,7 +32,7 @@ class OkHttpRedactionTest {
         val client = OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val req = chain.request().newBuilder()
-                    .addHeader("Authorization", "Bearer "+BuildConfig.OPENAI_API_KEY)
+                    .addHeader("Authorization", "Bearer "+"test-secret-key")
                     .build()
                 chain.proceed(req)
             }
@@ -40,7 +40,7 @@ class OkHttpRedactionTest {
             .addInterceptor { chain ->
                 val response = chain.proceed(chain.request())
                 // Return a response that includes the API key in body (simulate leak from server)
-                val bodyWithKey = "server-data: ${'$'}{BuildConfig.OPENAI_API_KEY}"
+                val bodyWithKey = "server-data: ${'$'}{"test-secret-key"}"
                 return@addInterceptor response.newBuilder().body(okhttp3.ResponseBody.create(response.body?.contentType(), bodyWithKey)).build()
             }
             .addInterceptor(interceptor)
@@ -61,7 +61,7 @@ class OkHttpRedactionTest {
         val joined = logger.lines.joinToString("\n")
 
         // Ensure the API key is not present in logs
-        assertFalse("API key leaked into logs", joined.contains(BuildConfig.OPENAI_API_KEY))
+        assertFalse("API key leaked into logs", joined.contains("test-secret-key"))
         // Ensure Authorization header is not shown
         assertFalse("Authorization header leaked into logs", joined.contains("Authorization:"))
     }

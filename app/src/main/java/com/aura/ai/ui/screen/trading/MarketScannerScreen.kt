@@ -3,6 +3,7 @@ package com.aura.ai.ui.screen.trading
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -15,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.aura.ai.domain.trading.model.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MarketScannerScreen(
     signals: List<TradeSignal>,
@@ -123,7 +125,7 @@ private fun ScannerSignalCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         signal.symbol,
                         style = MaterialTheme.typography.titleMedium,
@@ -137,7 +139,8 @@ private fun ScannerSignalCard(
                 }
                 Surface(
                     color = if (signal.direction == TradeDirection.BUY) Color(0xFF4CAF50) else Color(0xFFF44336),
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.padding(start = 8.dp)
                 ) {
                     Text(
                         signal.direction.name,
@@ -155,19 +158,14 @@ private fun ScannerSignalCard(
                 maxLines = 2
             )
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(MaterialTheme.colorScheme.outlineVariant)
-            )
+            Divider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 1.dp)
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         "AURA SCORE",
                         style = MaterialTheme.typography.labelSmall,
@@ -180,7 +178,7 @@ private fun ScannerSignalCard(
                         color = getScoreColor(signal.auraScore)
                     )
                 }
-                Column {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         "R/R RATIO",
                         style = MaterialTheme.typography.labelSmall,

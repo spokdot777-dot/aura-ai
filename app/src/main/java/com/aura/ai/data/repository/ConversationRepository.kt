@@ -3,7 +3,7 @@ package com.aura.ai.data.repository
 import com.aura.ai.data.database.dao.ConversationDao
 import com.aura.ai.data.database.entity.ConversationEntity
 import com.aura.ai.data.model.ChatMessage
-import com.aura.ai.data.remote.OpenAIService
+import com.aura.ai.data.remote.OllamaService
 import com.aura.ai.data.remote.model.ChatRequest
 import com.aura.ai.data.remote.model.MessageDto
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +14,7 @@ import javax.inject.Singleton
 @Singleton
 class ConversationRepository @Inject constructor(
     private val conversationDao: ConversationDao,
-    private val openAIService: OpenAIService
+    private val ollamaService: OllamaService
 ) {
     /** Stream of all stored messages, oldest first. */
     val messages: Flow<List<ChatMessage>> = conversationDao.getAllMessages().map { entities ->
@@ -33,11 +33,11 @@ class ConversationRepository @Inject constructor(
     }
 
     /**
-     * Send the conversation history to OpenAI and return the assistant reply.
+     * Send the conversation history to Ollama and return the assistant reply.
      * [systemPrompt] is prepended as the system message.
      * [history] is the list of prior messages to provide context.
      */
-    suspend fun sendToOpenAI(
+    suspend fun sendToOllama(
         systemPrompt: String,
         history: List<ChatMessage>
     ): String {
@@ -54,11 +54,11 @@ class ConversationRepository @Inject constructor(
                 )
             )
         }
-        val response = openAIService.chatCompletion(
-            ChatRequest(model = "gpt-4o-mini", messages = messages)
+        val response = ollamaService.chatCompletion(
+            ChatRequest(model = com.aura.ai.BuildConfig.OLLAMA_MODEL, messages = messages)
         )
         return response.choices.firstOrNull()?.message?.content
-            ?: error("Empty response from OpenAI")
+            ?: error("Ollama returned an empty response")
     }
 
     suspend fun clearHistory() = conversationDao.clearAll()

@@ -2,7 +2,6 @@ package com.aura.ai.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aura.ai.BuildConfig
 import com.aura.ai.data.model.AuraAction
 import com.aura.ai.data.model.ChatMessage
 import com.aura.ai.data.repository.ConversationRepository
@@ -22,7 +21,7 @@ data class AuraUiState(
     val isListening: Boolean = false,
     val errorMessage: String? = null,
     val pendingAction: AuraAction? = null,
-    val hasApiKey: Boolean = BuildConfig.OPENAI_API_KEY.isNotBlank()
+    val ollamaModel: String = com.aura.ai.BuildConfig.OLLAMA_MODEL
 )
 
 @HiltViewModel

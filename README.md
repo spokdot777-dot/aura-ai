@@ -124,13 +124,16 @@ git clone https://github.com/ferreiraeshawn8209-app/aura-ai.git
 cd aura-ai
 ```
 
-### 2. Add your OpenAI API key
+### 2. Configure Ollama
 
-Create (or edit) `local.properties` in the project root:
+AURA connects to an Ollama-compatible server. Create (or edit) `local.properties` in the project root when you need to override the defaults:
 
 ```properties
-OPENAI_API_KEY=sk-...your-key-here...
+OLLAMA_BASE_URL=http://10.0.2.2:11434/
+OLLAMA_MODEL=llama3.2
 ```
+
+The default base URL targets Ollama running on the host from an Android emulator. Use your machine's reachable address when running on a physical device.
 
 > ⚠️ **Never commit `local.properties`** — it is already in `.gitignore`.
 

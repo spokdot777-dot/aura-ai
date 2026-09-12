@@ -5,9 +5,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,34 +27,41 @@ fun PortfolioScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // Header
-        TopAppBar(
-            title = { Text("Portfolio") },
-            navigationIcon = {
-                IconButton(onClick = onBackClick) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                }
+        // Simple header row with back button and title (avoid TopAppBar to sidestep experimental API)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = onBackClick) {
+                Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
             }
-        )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Portfolio",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+        }
 
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Portfolio Summary
             item {
                 PortfolioDetailCard(portfolio)
             }
 
-            // Positions Header
             if (positions.isNotEmpty()) {
                 item {
                     Text(
                         "Open Positions (${positions.size})",
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(top = 8.dp)
                     )
                 }
 
@@ -64,9 +71,7 @@ fun PortfolioScreen(
                         onClose = { onPositionClose(position) }
                     )
                 }
-            }
-
-            if (positions.isEmpty()) {
+            } else {
                 item {
                     Text(
                         "No open positions",
@@ -126,6 +131,7 @@ private fun PortfolioDetailCard(portfolio: Portfolio) {
                         modifier = Modifier.weight(1f)
                     )
                 }
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -143,6 +149,7 @@ private fun PortfolioDetailCard(portfolio: Portfolio) {
                         modifier = Modifier.weight(1f)
                     )
                 }
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -197,6 +204,7 @@ private fun PositionCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+
                 Text(
                     "R${String.format("%.2f", position.unrealisedPnL)}",
                     style = MaterialTheme.typography.titleSmall,
@@ -222,6 +230,7 @@ private fun PositionCard(
                         fontWeight = FontWeight.Bold
                     )
                 }
+
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         "Current",
@@ -234,6 +243,7 @@ private fun PositionCard(
                         fontWeight = FontWeight.Bold
                     )
                 }
+
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         "Return",

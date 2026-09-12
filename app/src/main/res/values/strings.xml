@@ -10,7 +10,7 @@
     <string name="permission_rationale_microphone">AURA needs microphone access for voice input.</string>
     <string name="grant_permission">Grant Permission</string>
     <string name="dismiss">Dismiss</string>
-    <string name="error_no_api_key">OpenAI API key not configured. Please add OPENAI_API_KEY to local.properties.</string>
+    <string name="error_no_api_key">Ollama is not configured. Start Ollama and verify the configured server URL.</string>
     <string name="error_generic">Something went wrong. Please try again.</string>
     <string name="aura_greeting">Hi, I\'m AURA! I can make calls, send messages, set reminders, and more. How can I help?</string>
     <string name="typing_indicator">AURA is thinking…</string>

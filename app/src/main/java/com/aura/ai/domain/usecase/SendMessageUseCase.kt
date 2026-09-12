@@ -8,12 +8,12 @@ import com.aura.ai.domain.action.ActionParser
 import javax.inject.Inject
 
 /**
- * Orchestrates sending a user message to OpenAI and executing any resulting action.
+ * Orchestrates sending a user message to Ollama and executing any resulting action.
  *
  * Flow:
  * 1. Save user message to local DB.
  * 2. Build system prompt (persona + memory context).
- * 3. Send conversation history to OpenAI.
+ * 3. Send conversation history to Ollama.
  * 4. Parse the response for actions.
  * 5. Return the parsed [AuraAction] and assistant reply text.
  */
@@ -39,7 +39,7 @@ class SendMessageUseCase @Inject constructor(
         val memoryContext = memoryRepository.buildMemoryContext()
         val systemPrompt = buildSystemPrompt(memoryContext)
 
-        val rawResponse = conversationRepository.sendToOpenAI(
+        val rawResponse = conversationRepository.sendToOllama(
             systemPrompt = systemPrompt,
             history = history + userMessage
         )

@@ -1,7 +1,24 @@
+import java.util.Properties
+
+val localProperties = Properties().apply {
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.isFile) {
+        localPropertiesFile.inputStream().use(::load)
+    }
+}
+
+val ollamaBaseUrl = localProperties.getProperty("OLLAMA_BASE_URL")
+    ?: project.findProperty("OLLAMA_BASE_URL")?.toString()
+    ?: "http://10.0.2.2:11434/"
+val ollamaModel = localProperties.getProperty("OLLAMA_MODEL")
+    ?: project.findProperty("OLLAMA_MODEL")?.toString()
+    ?: "llama3.2"
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
 }
@@ -19,8 +36,9 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // OpenAI API key — override via local.properties or environment variable
-        buildConfigField("String", "OPENAI_API_KEY", "\"${project.findProperty("OPENAI_API_KEY") ?: ""}\"")
+        buildConfigField("String", "OLLAMA_BASE_URL", "\"${ollamaBaseUrl.replace("\\\"", "\\\\\\\"")}\"")
+        buildConfigField("String", "OLLAMA_MODEL", "\"${ollamaModel.replace("\\\"", "\\\\\\\"")}\"")
+        buildConfigField("String", "CORE_BASE_URL", "\"${project.findProperty("CORE_BASE_URL") ?: "https://core.invalid/"}\"")
     }
 
     buildTypes {
@@ -87,6 +105,7 @@ dependencies {
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.serialization.json)
 
     // DataStore
     implementation(libs.androidx.datastore.preferences)

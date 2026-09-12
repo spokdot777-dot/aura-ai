@@ -1,7 +1,10 @@
 package com.aura.ai.ui.screen.trading
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -14,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.aura.ai.domain.trading.model.TradingChallenge
 import com.aura.ai.domain.trading.usecase.ChallengeProgress
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TradingChallengeScreen(
     challenge: TradingChallenge?,

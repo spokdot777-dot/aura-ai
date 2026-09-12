@@ -7,6 +7,7 @@ import com.aura.ai.domain.trading.usecase.PaperTradingUseCase
 import com.aura.ai.domain.trading.usecase.RiskGovernorUseCase
 import com.aura.ai.domain.trading.usecase.ScanMarketUseCase
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
 
 /**
  * Trading action system for AURA.
@@ -28,10 +29,10 @@ sealed class TradingAction {
     data class AnalyzeAsset(val symbol: String) : TradingAction()
 
     @Serializable
-    data class GetPortfolio : TradingAction()
+    object GetPortfolio : TradingAction()
 
     @Serializable
-    data class GetPositions : TradingAction()
+    object GetPositions : TradingAction()
 
     @Serializable
     data class CreateTradePlan(val signalId: String) : TradingAction()
@@ -56,7 +57,7 @@ sealed class TradingAction {
     data class GetTradeHistory(val limit: Int = 100) : TradingAction()
 
     @Serializable
-    data class GetChallengeStatus : TradingAction()
+    object GetChallengeStatus : TradingAction()
 
     @Serializable
     data class SetTradingRisk(
@@ -70,7 +71,7 @@ sealed class TradingAction {
     data class HaltTrading(val reason: String = "User requested") : TradingAction()
 
     @Serializable
-    data class ResumeTrading : TradingAction()
+    object ResumeTrading : TradingAction()
 }
 
 @Serializable
